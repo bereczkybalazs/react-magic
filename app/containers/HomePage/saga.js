@@ -1,6 +1,10 @@
-// import { take, call, put, select } from 'redux-saga/effects';
+import axios from 'axios';
+import { takeLatest } from 'redux-saga/effects';
+import { createRequestInstance, sendRequest } from 'redux-saga-requests';
+import axiosDriver from 'redux-saga-requests-axios'; // or a different driver
+import { GET_POSTS } from './constants';
 
-// Individual exports for testing
-export default function* defaultSaga() {
-  // See example in containers/HomePage/saga.js
+export default function* rootSaga() {
+  yield createRequestInstance(axios, { driver: axiosDriver });
+  yield takeLatest(GET_POSTS, sendRequest);
 }

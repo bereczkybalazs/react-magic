@@ -11,6 +11,10 @@ import styled from 'styled-components';
 const Style = styled.div`
   background: white;
   padding: 1rem;
+
+  & + & {
+    margin-top: 1rem;
+  }
 `;
 
 function Article(props) {

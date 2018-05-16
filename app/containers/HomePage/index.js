@@ -16,10 +16,11 @@ import { compose } from 'redux';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import Article from 'components/Article';
-import makeSelectHomePage from './selectors';
+import { makeSelectPosts } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
+import { getPosts } from './actions';
 
 
 const Style = styled.div`
@@ -28,30 +29,39 @@ const Style = styled.div`
   min-height: 50vh;
 `;
 
-function HomePage() {
-  return (
-    <Style>
-      <Helmet>
-        <title>HomePage kek</title>
-        <meta name="description" content="Description of HomePage" />
-      </Helmet>
-      <FormattedMessage {...messages.header} />
-      <Article title="dilo" content="he" />
-    </Style>
-  );
+class HomePage extends React.Component {
+  componentDidMount() {
+    this.props.getPosts();
+  }
+  render() {
+    return (
+      <Style>
+        <Helmet>
+          <title>HomePage kek</title>
+          <meta name="description" content="Description of HomePage" />
+        </Helmet>
+        <FormattedMessage {...messages.header} />
+        { this.props.posts.map((post) => <Article key={post.id} title={post.title} content={post.body} />)}
+      </Style>
+    );
+  }
 }
 
 HomePage.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  getPosts: PropTypes.func.isRequired,
+  posts: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
 };
 
 const mapStateToProps = createStructuredSelector({
-  homepage: makeSelectHomePage(),
+  posts: makeSelectPosts(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    getPosts: () => dispatch(getPosts()),
   };
 }
 
